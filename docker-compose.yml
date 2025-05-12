@@ -15,3 +15,7 @@ services:
 
 volumes:
   pg_data_autosteer:
+
+# docker compose up -d      # 背景啟動
+# docker compose logs -f    # 即時查看啟動日誌
+# docker compose down       # 停止並關閉（不刪資料）
