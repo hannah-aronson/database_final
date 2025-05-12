@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16
+    container_name: pg_autosteer
+    environment:
+      POSTGRES_USER: autosteer
+      POSTGRES_PASSWORD: autosteer_database
+      POSTGRES_DB: autosteer_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data_autosteer:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pg_data_autosteer:
