@@ -1,0 +1,16 @@
+# Python 虛擬環境
+venv/
+
+# 資料檔案
+*.tsv
+*.tsv.gz
+
+# Jupyter 自動產生檔案
+.ipynb_checkpoints/
+
+# Python 編譯中間檔
+__pycache__/
+*.py[cod]
+
+# VSCode 設定（可選）
+.vscode/
