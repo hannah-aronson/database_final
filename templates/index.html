@@ -1,0 +1,88 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Query Latency Comparison</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Latency per Hint Strategy</h2>
+    <canvas id="latencyChart" width="800" height="400"></canvas>
+    <button onclick="runExperiment()">Run Experiment</button>
+    <p id="result"></p>
+
+    <script>
+        async function runExperiment() {
+            const res = await fetch('/run_experiment');
+            const data = await res.json();
+
+            const rounds = data.auto_latency.length;
+            const labels = Array.from({ length: rounds }, (_, i) => `Round ${i + 1}`);
+
+            const ctx = document.getElementById('latencyChart').getContext('2d');
+
+            // Remove old chart if it exists
+            if (window.myChart) window.myChart.destroy();
+
+            // Create new chart with 4 series
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'AutoSteer++ (Random Hint)',
+                            data: data.auto_latency,
+                            borderColor: 'blue',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            fill: false
+                        },
+                        ...['A', 'B', 'C'].map(h => ({
+                            label: `Baseline (Hint ${h})`,
+                            data: data.baseline_latency[h],
+                            borderColor: h === 'A' ? 'orange' : h === 'B' ? 'green' : 'red',
+                            backgroundColor: 'transparent',
+                            fill: false
+                        }))
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Latency (ms)' }
+                        }
+                    }
+                }
+            });
+
+            // Show stats
+            const resultEl = document.getElementById('result');
+            resultEl.innerHTML = `
+                ✅ Best Hint Recommendation: <strong>Hint ${data.recommendation}</strong><br><br>
+                ${formatStats('AutoSteer++', data.auto_stats)}
+                ${formatStats('Baseline (Hint A)', data.baseline_stats['A'])}
+                ${formatStats('Baseline (Hint B)', data.baseline_stats['B'])}
+                ${formatStats('Baseline (Hint C)', data.baseline_stats['C'])}
+            `;
+
+            // function formatStats(stats) {
+            //     return Object.entries(stats).map(([hint, s]) =>
+            //         `Hint ${hint}:\n  Avg = ${s.avg.toFixed(2)} ms\n  Std = ${s.std.toFixed(2)} ms\n  Count = ${s.count}`
+            //     ).join('\n\n');
+            // }
+            function formatStats(title, stats) {
+                return `
+                    <strong>${title}</strong><br>
+                    Avg: ${stats.avg.toFixed(2)} ms<br>
+                    Std: ${stats.std.toFixed(2)} ms<br>
+                    Min: ${stats.min.toFixed(2)} ms<br>
+                    Max: ${stats.max.toFixed(2)} ms<br><br>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
