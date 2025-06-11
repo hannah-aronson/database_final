@@ -27,26 +27,28 @@ The project enables:
 
 1. Clone this repository:
 
-\```bash
+```
 git clone <your-repo-url>
 cd <your-repo-folder>
-\```
+```
 
 2. Install required dependencies:
 
-\```bash
+```
 pip install -r requirements.txt
-\```
+```
 
 *Note: If `requirements.txt` is not present, you can manually install the following libraries:*
 
-\```bash
+```
 pip install matplotlib numpy pandas seaborn streamlit
-\```
+```
 
 ## Usage
 
 ### Project
+
+```
 project/
 ├── app.py                # Streamlit Dashboard
 ├── main.py               # RL 主程式
@@ -59,18 +61,19 @@ project/
 ├── results/              # 存 rl_history.json baseline_history.json rl_latency_all.json
 README.md             
 requirements.txt
+```
 
 ### Run RL Experiment
 
-\```bash
+```
 python3 main.py
-\```
+```
 
 ### Launch Dashboard
 
-\```bash
+```
 streamlit run app.py
-\```
+```
 
 ## Features
 
